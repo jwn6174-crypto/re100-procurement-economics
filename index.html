@@ -157,8 +157,8 @@
 
     <div class="phase">
       <div class="phase-head"><span class="ptag">Phase 2</span><h3>기업 유형화</h3></div>
-      <p>3축(소비규모·부지·ETS)으로 5개 아키타입 정의. 부지 없으면 자가발전 제외, 10GWh 미만이면 직접 PPA 제외 등 특성을 엔진에 연결.</p>
-      <div class="res"><b>결과</b> · 유형별로 가용 수단·순위가 갈림. 부지 보유 기업은 자가발전 1위, 반도체(무부지 처리)는 녹색프리미엄 1위, 소형 서비스업은 선택지 3개뿐. (아래 매트릭스 ①)</div>
+      <p>3축(소비규모·ETS·자가발전 커버리지)으로 7개 유형(업종+규모) 정의. 자가발전은 "있다/없다"가 아니라 부지면적과 수요로 산출한 커버리지 비율로 처리. 영세 서비스는 임차라 직접 PPA·자가발전 제외.</p>
+      <div class="res"><b>결과</b> · 유형별로 가용 수단·순위가 갈림. 자가발전 커버리지가 반도체 1.5% vs 철강 29.2%로 정반대 — "부지 유무가 아니라 수요 대비 부지 비율"이 관건. (아래 매트릭스 ①, ②-1)</div>
     </div>
 
     <div class="phase">
@@ -177,19 +177,21 @@
   <section>
     <div class="num">결과 ①</div>
     <h2>단가 기준 순위 매트릭스 (비용엔진)</h2>
-    <p>비용엔진만 적용한 순위(총비용 기준). 1=최저비용. 부지·규모에 따라 가용 수단이 다름.</p>
+    <p>비용엔진만 적용한 순위(총비용 기준). 1=최저비용. 자가발전은 커버리지 비율로 혼합비용 산출.</p>
     <table class="mtx">
       <thead><tr><th></th><th>녹색<br>프리미엄</th><th>REC</th><th>제3자<br>PPA</th><th>직접<br>PPA</th><th>자가<br>발전</th></tr></thead>
       <tbody>
-        <tr><td class="lab">반도체·디스플레이<br><span>ETS · 무부지</span></td><td class="c r1">1</td><td class="c r2">2</td><td class="c r4">4</td><td class="c r3">3</td><td class="c na">불가</td></tr>
-        <tr><td class="lab">철강·석유화학<br><span>ETS · 부지</span></td><td class="c r2">2</td><td class="c r3">3</td><td class="c r5">5</td><td class="c r4">4</td><td class="c r1">1</td></tr>
-        <tr><td class="lab">자동차·기계 중견<br><span>부지</span></td><td class="c r2">2</td><td class="c r3">3</td><td class="c r5">5</td><td class="c r4">4</td><td class="c r1">1</td></tr>
-        <tr><td class="lab">데이터센터<br><span>부지</span></td><td class="c r2">2</td><td class="c r3">3</td><td class="c r5">5</td><td class="c r4">4</td><td class="c r1">1</td></tr>
-        <tr><td class="lab">서비스 중소<br><span>무부지 · 소형</span></td><td class="c r1">1</td><td class="c r2">2</td><td class="c r3">3</td><td class="c na">불가</td><td class="c na">불가</td></tr>
+        <tr><td class="lab">반도체 대기업<br><span>ETS · 커버리지 1.5%</span></td><td class="c r1">1</td><td class="c r2">2</td><td class="c r5">5</td><td class="c r4">4</td><td class="c r3">3</td></tr>
+        <tr><td class="lab">철강 대기업<br><span>ETS · 커버리지 29%</span></td><td class="c r1">1</td><td class="c r3">3</td><td class="c r5">5</td><td class="c r4">4</td><td class="c r2">2</td></tr>
+        <tr><td class="lab">석유화학 대기업<br><span>ETS · 커버리지 5%</span></td><td class="c r1">1</td><td class="c r3">3</td><td class="c r5">5</td><td class="c r4">4</td><td class="c r2">2</td></tr>
+        <tr><td class="lab">자동차 완성차 대기업<br><span>ETS · 커버리지 14%</span></td><td class="c r1">1</td><td class="c r3">3</td><td class="c r5">5</td><td class="c r4">4</td><td class="c r2">2</td></tr>
+        <tr><td class="lab">데이터센터<br><span>비ETS · 커버리지 0.3%</span></td><td class="c r1">1</td><td class="c r2">2</td><td class="c r5">5</td><td class="c r4">4</td><td class="c r3">3</td></tr>
+        <tr><td class="lab">중소 제조(부품)<br><span>비ETS · 커버리지 23%</span></td><td class="c r1">1</td><td class="c r3">3</td><td class="c r5">5</td><td class="c r4">4</td><td class="c r2">2</td></tr>
+        <tr><td class="lab">영세 서비스·소매<br><span>비ETS · 임차(부지0)</span></td><td class="c r1">1</td><td class="c r2">2</td><td class="c r3">3</td><td class="c na">불가</td><td class="c na">불가</td></tr>
       </tbody>
     </table>
     <div class="legend"><span><span class="sw r1"></span>1위(최저비용)</span><span><span class="sw r3"></span>중위</span><span><span class="sw r5"></span>5위(최고)</span></div>
-    <p style="font-size:13.5px;color:var(--muted);margin-top:14px;">단가만 보면 자가발전·녹색프리미엄이 싸고 PPA가 비싸다. 그러나 이는 "값"만의 순위다.</p>
+    <p style="font-size:13.5px;color:var(--muted);margin-top:14px;">단가만 보면 녹색프리미엄이 가장 싸고 PPA가 비싸다. 자가발전은 커버리지가 높은 유형(철강·중소제조)에서 2위로 올라온다. 그러나 이는 "값"만의 순위다.</p>
   </section>
 
   <section>
@@ -199,26 +201,47 @@
     <table class="mtx">
       <thead><tr><th></th><th>녹색<br>프리미엄</th><th>REC</th><th>제3자<br>PPA</th><th>직접<br>PPA</th><th>자가<br>발전</th></tr></thead>
       <tbody>
-        <tr><td class="lab">반도체·디스플레이<br><span>ETS · 무부지</span></td><td class="c down">1→4 ▼</td><td class="c down">2→3 ▼</td><td class="c up">4→2 ▲</td><td class="c up">3→1 ▲</td><td class="c na">불가</td></tr>
-        <tr><td class="lab">철강·석유화학<br><span>ETS · 부지</span></td><td class="c down">2→5 ▼</td><td class="c down">3→4 ▼</td><td class="c up">5→3 ▲</td><td class="c up">4→2 ▲</td><td class="c same">1→1 −</td></tr>
-        <tr><td class="lab">자동차·기계 중견<br><span>부지</span></td><td class="c down">2→5 ▼</td><td class="c down">3→4 ▼</td><td class="c up">5→3 ▲</td><td class="c up">4→2 ▲</td><td class="c same">1→1 −</td></tr>
-        <tr><td class="lab">데이터센터<br><span>부지</span></td><td class="c down">2→5 ▼</td><td class="c down">3→4 ▼</td><td class="c up">5→3 ▲</td><td class="c up">4→2 ▲</td><td class="c same">1→1 −</td></tr>
-        <tr><td class="lab">서비스 중소<br><span>무부지 · 소형</span></td><td class="c down">1→2 ▼</td><td class="c down">2→3 ▼</td><td class="c up">3→1 ▲</td><td class="c na">불가</td><td class="c na">불가</td></tr>
+        <tr><td class="lab">반도체 대기업<br><span>ETS</span></td><td class="c down">1→5 ▼</td><td class="c down">2→4 ▼</td><td class="c up">5→3 ▲</td><td class="c up">4→2 ▲</td><td class="c up">3→1 ▲</td></tr>
+        <tr><td class="lab">철강 대기업<br><span>ETS</span></td><td class="c down">1→5 ▼</td><td class="c down">3→4 ▼</td><td class="c up">5→3 ▲</td><td class="c up">4→2 ▲</td><td class="c up">2→1 ▲</td></tr>
+        <tr><td class="lab">석유화학 대기업<br><span>ETS</span></td><td class="c down">1→5 ▼</td><td class="c down">3→4 ▼</td><td class="c up">5→3 ▲</td><td class="c up">4→2 ▲</td><td class="c up">2→1 ▲</td></tr>
+        <tr><td class="lab">자동차 완성차 대기업<br><span>ETS</span></td><td class="c down">1→5 ▼</td><td class="c down">3→4 ▼</td><td class="c up">5→3 ▲</td><td class="c up">4→2 ▲</td><td class="c up">2→1 ▲</td></tr>
+        <tr><td class="lab">데이터센터<br><span>비ETS</span></td><td class="c down">1→4 ▼</td><td class="c down">2→5 ▼</td><td class="c up">5→3 ▲</td><td class="c up">4→2 ▲</td><td class="c up">3→1 ▲</td></tr>
+        <tr><td class="lab">중소 제조(부품)<br><span>비ETS</span></td><td class="c down">1→4 ▼</td><td class="c down">3→5 ▼</td><td class="c up">5→3 ▲</td><td class="c up">4→2 ▲</td><td class="c up">2→1 ▲</td></tr>
+        <tr><td class="lab">영세 서비스·소매<br><span>비ETS</span></td><td class="c down">1→2 ▼</td><td class="c down">2→3 ▼</td><td class="c up">3→1 ▲</td><td class="c na">불가</td><td class="c na">불가</td></tr>
       </tbody>
     </table>
     <div class="legend"><span><span class="sw up"></span>▲ 상승(역전)</span><span><span class="sw down"></span>▼ 하락</span><span><span class="sw same"></span>− 유지</span></div>
-    <p style="font-size:13.5px;color:var(--muted);margin-top:14px;">PPA 열이 전부 상승, 녹색프리미엄·REC 열이 전부 하락. ETS 기업(반도체·철강)에서 직접 PPA가 1~2위로 올라온다. 자가발전은 부지 보유 기업에서 1위를 유지(싸고·안정·인정).</p>
+    <p style="font-size:13.5px;color:var(--muted);margin-top:14px;">PPA·자가발전 열이 전부 상승, 녹색프리미엄·REC 열이 전부 하락. 자가발전이 모든 유형에서 1위로, 직접 PPA가 2위로 올라온다. 비ETS인 데이터센터·중소제조도 글로벌 품질 효과로 PPA가 상위로 역전된다.</p>
+  </section>
+
+  <section>
+    <div class="num">결과 ②-1</div>
+    <h2>자가발전 커버리지 — 같은 대기업도 정반대</h2>
+    <p>부지를 "있다/없다"로 보지 않고, 부지면적과 수요로 커버리지 비율을 산출한다. 반도체와 철강은 둘 다 대기업·부지 보유이나, 수요 대비 부지 비율 차이로 자가발전 커버리지가 정반대다.</p>
+    <table>
+      <thead><tr><th>유형</th><th>연소비(GWh)</th><th>부지면적(㎡)</th><th>자가발전 커버리지</th></tr></thead>
+      <tbody>
+        <tr><td>철강 대기업</td><td>4,000</td><td>30,850,000</td><td>29.2%</td></tr>
+        <tr><td>중소 제조(부품)</td><td>5</td><td>30,000</td><td>22.7%</td></tr>
+        <tr><td>자동차 완성차</td><td>2,000</td><td>7,327,348</td><td>13.9%</td></tr>
+        <tr><td>석유화학 대기업</td><td>3,500</td><td>4,587,561</td><td>5.0%</td></tr>
+        <tr><td>반도체 대기업</td><td>5,000</td><td>1,920,000</td><td>1.5%</td></tr>
+        <tr><td>데이터센터</td><td>1,500</td><td>100,000</td><td>0.3%</td></tr>
+        <tr><td>영세 서비스·소매</td><td>3</td><td>0 (임차)</td><td>0.0%</td></tr>
+      </tbody>
+    </table>
+    <p style="font-size:13.5px;color:var(--muted);">부지면적은 대표 기업 공개 자료(포스코·현대차·LG화학·SK하이닉스). 커버리지 = 부지 × 가용비율 0.24(한국에너지공단) × 설치계수 × 이용률 ÷ 수요. 반도체(1.5%)와 철강(29.2%)의 대비가 "부지 유무가 아니라 수요 대비 부지 비율이 관건"임을 보여준다.</p>
   </section>
 
   <section>
     <div class="num">결과 ③</div>
     <h2>강건성 — 역전은 단단하다</h2>
     <div class="cards">
-      <div class="mcard"><div class="v">100%</div><div class="k">반도체 직접 PPA<br>1~2위 유지 확률 (MC 5000회)</div></div>
-      <div class="mcard"><div class="v">92.5%</div><div class="k">철강 직접 PPA<br>1~2위 유지 확률 (MC 5000회)</div></div>
+      <div class="mcard"><div class="v">~98%</div><div class="k">ETS 기업 4종 직접 PPA<br>1~2위 유지 확률 (MC 5000회)</div></div>
       <div class="mcard"><div class="v">0건</div><div class="k">단일 입력으로<br>역전이 깨진 경우 (토네이도)</div></div>
+      <div class="mcard"><div class="v">77%</div><div class="k">비용중시로 이만큼 이동해야<br>직접 PPA가 3위로 하락 (임계점)</div></div>
     </div>
-    <p>임계점 분석: 관점을 비용중시로 완전히 옮겨도, RE품질 가중치를 0으로 낮춰도, REC 가격 30~110원 전 범위에서도 직접 PPA는 1~2위를 유지했다. <strong>ETS적격성과 RE품질 가중치를 동시에 거의 0까지 없애야만</strong> 비로소 녹색프리미엄에 자리를 내준다 — ETS 기업이 ETS 인정을 무시한다는 비현실적 조건에서만 발생.</p>
+    <p>몬테카를로 5000회에서 반도체·철강·석유화학·자동차 4개 ETS 기업 모두 직접 PPA의 1~2위 유지 확률이 약 97~98%로 고르게 나타났다. 토네이도에서 단일 입력(REC·SMP·가중치·망요금)을 극단까지 밀어도 순위는 안 깨졌다. 임계점 분석: 관점을 공급망대응에서 비용중시 쪽으로 <strong>77%까지 이동</strong>해야 비로소 직접 PPA가 3위로 하락한다 — 어지간한 관점 변화에는 버틴다는 뜻. (자가발전은 커버리지 구조 반영 후 전 유형에서 종합 1위.)</p>
   </section>
 
   <section>
@@ -250,7 +273,8 @@
 
     <h3>구조 보완 (코드 수정)</h3>
     <div class="todo-grid">
-      <div class="todo-item"><div class="h">자가발전을 비율로 모델링<span class="badge b-code">코드</span></div><div class="d">현재 on/off 흑백. 반도체처럼 수요가 거대한 경우를 "자가발전 커버리지 비율 + 나머지는 타 수단"으로 바꿔야 함. 가장 중요한 구조 보완.</div></div>
+      <div class="todo-item" style="border-left-color:var(--teal);"><div class="h">자가발전 커버리지 비율 모델 — 반영 완료 ✓</div><div class="d">on/off 흑백을 폐지하고 부지면적·수요로 커버리지 비율(0~1)을 산출하도록 개편. 대기업 부지는 공개 자료(포스코·현대차·LG화학·SK하이닉스)로 교체.</div></div>
+      <div class="todo-item"><div class="h">자가발전 점수 정밀화<span class="badge b-code">코드</span></div><div class="d">자가발전의 RE품질·안정성 점수가 현재 "100% 자가발전" 가정. 실제 커버리지 비율을 반영하도록 정밀화 예정.</div></div>
       <div class="todo-item"><div class="h">PPA 협상력 채널 활성화<span class="badge b-code">코드</span></div><div class="d">현재 역전 때문에 규모→가격 연결이 잠복. REC 하락 시나리오에서 다듬어야 함.</div></div>
     </div>
 
