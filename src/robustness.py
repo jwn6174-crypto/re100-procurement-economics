@@ -30,13 +30,18 @@ def eff_weights(weights, firm):
 def composite(m, pv, firm, weights, scores):
     costs = cost_engine(m, pv, firm, "total")
     cs = cost_scores(costs)
+    coverage = firm.self_gen_coverage(pv)
+    backup = "직접 PPA" if costs.get("직접 PPA") is not None else "REC 구매"
     out = {}
     for s in INSTRUMENTS:
         if costs[s] is None:
             continue
         val = weights["비용"] * cs[s]
         for c in NONCOST:
-            val += weights[c] * scores[s][c]
+            base = scores[s][c]
+            if s == "자가발전" and coverage < 1.0:
+                base = coverage * base + (1 - coverage) * scores[backup][c]
+            val += weights[c] * base
         out[s] = val
     return out
 

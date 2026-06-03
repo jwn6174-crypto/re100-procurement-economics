@@ -6,6 +6,10 @@
   - 비용: Phase 1 총비용을 기업별 가용수단 내에서 정규화(최저=1, 최고=0)
   - 나머지 4개: 수단별 고정 점수(0~1, 높을수록 우수)
   - ETS적격성: ETS 비대상 기업은 이 기준 가중치를 0으로 두고 재정규화
+  - 자가발전 점수 정밀화: 자가발전은 커버리지 비율만큼만 '순수 자가발전'이고
+    나머지는 보완수단(직접 PPA, 없으면 REC)이므로, 기준점수도 비용처럼
+    커버리지로 혼합한다. (보완수단이 고품질이라 실질 변화는 작지만, 'coverage 1.5%를
+    100%처럼 만점 주는' 과대평가를 구조적으로 제거 → 결론이 점수 과대평가에 의존하지 않음을 보장)
 가중치는 시나리오(비용중시/안정성중시/공급망대응)로 분기.
   ※ 현재 가중치는 잠정값. 논문에서는 전문가 쌍대비교 기반 AHP로 대체.
      ahp_weights()로 AHP 가중치 산출 가능(일관성비율 CR 포함).
@@ -66,17 +70,30 @@ def effective_weights(scenario, firm):
 
 
 def composite_scores(m, pv, firm, scenario):
-    """수단별 종합점수(높을수록 우수). 가용 수단만."""
+    """수단별 종합점수(높을수록 우수). 가용 수단만.
+    자가발전은 커버리지 비율만큼만 '순수 자가발전'이고 나머지는 보완수단이므로,
+    기준점수도 비용처럼 혼합한다(커버리지×자가 + (1-커버리지)×보완수단).
+    """
     costs = cost_engine(m, pv, firm, mode="total")
     cs = cost_scores(costs)
     w = effective_weights(scenario, firm)
+    coverage = firm.self_gen_coverage(pv)
+    backup = "직접 PPA" if costs.get("직접 PPA") is not None else "REC 구매"
+
+    def criterion_score(inst, crit):
+        base = INSTRUMENT_SCORES[inst][crit]
+        if inst == "자가발전" and coverage < 1.0:
+            # 자가발전 수단의 실질 점수 = 커버리지×자가 + (1-커버리지)×보완수단
+            return coverage * base + (1 - coverage) * INSTRUMENT_SCORES[backup][crit]
+        return base
+
     out = {}
     for s in INSTRUMENTS:
         if costs[s] is None:
             continue
         score = w["비용"] * cs[s]
         for c in ["가격안정성", "계약유연성", "ETS적격성", "RE품질"]:
-            score += w[c] * INSTRUMENT_SCORES[s][c]
+            score += w[c] * criterion_score(s, c)
         out[s] = score
     return out
 
