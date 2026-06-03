@@ -1,13 +1,22 @@
 """
-RE100 이행수단 비용엔진 (라이브러리 · v3)
+RE100 이행수단 비용엔진 (라이브러리 · v4)
 ==========================================
-v3 변경점: 기업 특성이 엔진에 실제로 반영되도록 연결
-  - 규모 → PPA 협상력(ppa_position 자동 도출): 클수록 바닥에 가깝게(저렴)
-  - 규모 → 직접 PPA 적격성: ppa_min_gwh 미만이면 직접 PPA 불가
-  - 부지 → 자가발전 게이팅(has_land)
-  - ETS 편입(ets_covered): Phase 1 단가엔 무영향, Phase 3 적격성 보정에서 사용
-주의: 현재 고REC 국면(SMP+REC>천장)에서는 PPA가 바닥에 고정되어
-      '규모→협상력' 채널이 잠복함. REC 하락 시나리오(Phase 4)에서 활성화됨.
+v4 변경점: '부지 보유(has_land, 불리언)' 축을 폐지하고,
+           자가발전을 '수요 커버리지 비율(0~1)'로 모델링.
+  - 가용 부지면적(㎡) → 설치가능 용량 → 연간 발전량 → 수요 대비 커버리지 비율
+  - 자가발전 비용 = 커버리지비율 × 자가단가(LCOE) + (1−비율) × 보완수단단가
+    (보완수단 = 직접 PPA 가능 시 직접 PPA, 아니면 REC)
+  - 이로써 "부지는 있으나 수요가 거대한 반도체(낮은 커버리지)"와
+    "부지 대비 수요가 작은 중소 제조(높은 커버리지)"가 자연스럽게 구분됨.
+
+축(3개): 소비규모 / ETS 편입 / 자가발전 커버리지(부지면적+수요로 산출)
+
+근거·출처 메모:
+  - 태양광 설치계수(kW/㎡)·이용률: NREL/업계 통용 표준값(임시 기본값, 갱신 가능)
+  - LCOE 방식: IRENA·IEA·NREL 표준 / 국내 적용 신경철 외(2024)
+  - 부지면적·소비규모: 대표 대기업 스케일의 추정치(임시값, 한전 데이터·기업공시로 갱신)
+  - 직접 PPA 접근성: 제도상 소비량 하한은 없음(2025.7 On-Site 1MW 폐지, 제3자 300kW).
+    소형기업 'available=False'는 법적 금지가 아니라 협상·계약 부담을 반영한 가정.
 """
 from dataclasses import dataclass
 from typing import Optional
@@ -33,9 +42,13 @@ class MarketData:
 class PVParams:
     capex_per_kw: float = 1_300_000.0
     om_per_kw_yr: float = 35_000.0
-    capacity_factor: float = 0.15
+    capacity_factor: float = 0.15      # 한국 태양광 이용률 ~13~15%
     lifetime_yr: int = 20
     discount_rate: float = 0.045
+    kw_per_m2: float = 0.12            # 설치계수: 부지 1㎡당 설치가능 용량(kW)
+    usable_land_ratio: float = 0.24    # 전체 부지 중 태양광 설치가능 비율
+    #   근거: 한국에너지공단 산업단지 태양광 잠재량 분석
+    #   (지붕면적=부지의 47.5% × 그중 설치가능 50% ≈ 0.24)
 
 
 def derive_ppa_position(consumption_gwh: float) -> float:
@@ -53,11 +66,11 @@ class FirmProfile:
     annual_consumption_gwh: float
     sector: str = ""
     re_target_share: float = 1.0
-    has_land: bool = True
+    land_area_m2: float = 0.0          # 자가발전 가용 부지면적(㎡). 0이면 자가발전 불가
     ets_covered: bool = False
     ppa_ceiling_ratio: float = 0.95
-    ppa_position: Optional[float] = None   # None이면 규모에서 자동 도출
-    ppa_min_gwh: float = 10.0              # 직접 PPA 최소 규모
+    ppa_position: Optional[float] = None
+    ppa_available: bool = True         # 직접 PPA 현실적 접근성(법적 기준 아님)
 
     def __post_init__(self):
         if self.ppa_position is None:
@@ -65,7 +78,19 @@ class FirmProfile:
 
     @property
     def direct_ppa_available(self) -> bool:
-        return self.annual_consumption_gwh * self.re_target_share >= self.ppa_min_gwh
+        return self.ppa_available
+
+    def self_gen_coverage(self, pv: "PVParams") -> float:
+        """가용 부지면적으로 충당 가능한 연간 수요 비율(0~1)."""
+        if self.land_area_m2 <= 0:
+            return 0.0
+        usable_area = self.land_area_m2 * pv.usable_land_ratio
+        capacity_kw = usable_area * pv.kw_per_m2
+        annual_gen_kwh = capacity_kw * 8760 * pv.capacity_factor
+        demand_kwh = self.annual_consumption_gwh * 1e6 * self.re_target_share
+        if demand_kwh <= 0:
+            return 0.0
+        return min(1.0, annual_gen_kwh / demand_kwh)
 
 
 def crf(rate: float, n: int) -> float:
@@ -94,12 +119,23 @@ def cost_engine(m: MarketData, pv: PVParams, firm: FirmProfile, mode: str = "tot
     ppa_e, _ = ppa_energy_price(m, firm)
     direct = (ppa_e + m.non_energy_charge + m.network_charge_direct + m.transaction_fee_direct) \
         if firm.direct_ppa_available else None
+
+    # 자가발전: 커버리지 비율로 혼합비용 산출
+    coverage = firm.self_gen_coverage(pv)
+    if coverage <= 0:
+        self_gen = None
+    else:
+        lcoe = pv_lcoe(pv)
+        # 나머지(1-coverage)를 채울 보완수단: 직접 PPA 가능하면 직접 PPA, 아니면 REC구매
+        backup = direct if direct is not None else (m.industrial_tariff + m.rec_per_kwh)
+        self_gen = coverage * lcoe + (1 - coverage) * backup
+
     total = {
         "녹색프리미엄": m.industrial_tariff + m.green_premium_adder,
         "REC 구매": m.industrial_tariff + m.rec_per_kwh,
         "제3자 PPA": ppa_e + m.non_energy_charge + m.network_charge_3rd,
         "직접 PPA": direct,
-        "자가발전": pv_lcoe(pv) if firm.has_land else None,
+        "자가발전": self_gen,
     }
     if mode == "total":
         return total
