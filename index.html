@@ -175,6 +175,73 @@
   </section>
 
   <section>
+    <div class="num">입력 ⓐ</div>
+    <h2>비용엔진이 만든 단가 — PPA 분해</h2>
+    <p>5개 수단의 단가(원/kWh)가 어떻게 조립되는지. 녹색·REC는 산업용요금(179)에 웃돈을, PPA는 전력량요금을 PPA단가로 갈아끼우고 망요금을 더한다.</p>
+    <table>
+      <thead><tr><th>수단</th><th>단가 구성</th><th>합(원/kWh)</th></tr></thead>
+      <tbody>
+        <tr><td>녹색프리미엄</td><td>산업용요금 179 + 프리미엄 11</td><td><b>190</b></td></tr>
+        <tr><td>REC 구매</td><td>산업용요금 179 + REC 70</td><td><b>249</b></td></tr>
+        <tr><td>제3자 PPA</td><td>PPA단가 185 + 비에너지요금 59 + 망요금 25</td><td><b>269</b></td></tr>
+        <tr><td>직접 PPA</td><td>PPA단가 185 + 비에너지요금 59 + 망요금 8</td><td><b>252</b></td></tr>
+        <tr><td>자가발전(철강 예)</td><td>커버리지 29%×LCOE 102.7 + 71%×보완수단</td><td><b>208</b></td></tr>
+      </tbody>
+    </table>
+    <p style="font-size:13.5px;color:var(--muted);">PPA 단가는 비공개라 <b>바닥(SMP 115 + REC 70 = 185)~천장(전력량요금 120×0.95 = 114)</b> 구간으로 추정한다. 현재는 REC가 높아 바닥(185)이 천장을 넘어 바닥값에 고정된 상태(방법론 한계로 기록됨). 자가발전은 단일 단가가 아니라 커버리지 비율로 자가단가와 보완수단을 섞은 혼합비용이다.</p>
+  </section>
+
+  <section>
+    <div class="num">입력 ⓑ</div>
+    <h2>위험·적격성 기준 점수 (5수단 × 4기준)</h2>
+    <p>비용 외 4개 기준을 0~1로 점수화. 이 점수표가 "단가 1위 녹색프리미엄이 종합 꼴찌로 추락하는" 역전의 원재료다. (현재 판단값 — 보강 예정)</p>
+    <table>
+      <thead><tr><th>수단</th><th>가격안정성</th><th>계약유연성</th><th>ETS적격성</th><th>RE품질</th></tr></thead>
+      <tbody>
+        <tr><td>녹색프리미엄</td><td>0.2</td><td>1.0</td><td><b>0.0</b></td><td>0.2</td></tr>
+        <tr><td>REC 구매</td><td>0.4</td><td>0.8</td><td>1.0</td><td>0.6</td></tr>
+        <tr><td>제3자 PPA</td><td>0.8</td><td>0.3</td><td>1.0</td><td>0.9</td></tr>
+        <tr><td>직접 PPA</td><td>0.9</td><td>0.2</td><td>1.0</td><td>1.0</td></tr>
+        <tr><td>자가발전</td><td>1.0</td><td>0.2</td><td>1.0</td><td>1.0</td></tr>
+      </tbody>
+    </table>
+    <p style="font-size:13.5px;color:var(--muted);">핵심은 ETS적격성 — 녹색프리미엄만 0(ETS 미인정), 나머지는 1. 그리고 PPA·자가발전이 안정성·품질에서 높다. 단가에선 졌지만 이 점수들이 가중치를 만나면 역전된다.</p>
+  </section>
+
+  <section>
+    <div class="num">입력 ⓒ</div>
+    <h2>시나리오별 AHP 가중치 (3관점 × 5기준)</h2>
+    <p>"누구의 관점으로 평가하느냐"에 따라 기준별 중요도가 달라진다. 합은 각 1.0.</p>
+    <table>
+      <thead><tr><th>시나리오</th><th>비용</th><th>가격안정성</th><th>계약유연성</th><th>ETS적격성</th><th>RE품질</th></tr></thead>
+      <tbody>
+        <tr><td>비용중시</td><td><b>0.50</b></td><td>0.15</td><td>0.10</td><td>0.15</td><td>0.10</td></tr>
+        <tr><td>안정성중시</td><td>0.20</td><td><b>0.35</b></td><td>0.20</td><td>0.15</td><td>0.10</td></tr>
+        <tr><td>공급망대응</td><td>0.20</td><td>0.15</td><td>0.05</td><td><b>0.30</b></td><td><b>0.30</b></td></tr>
+      </tbody>
+    </table>
+    <p style="font-size:13.5px;color:var(--muted);">공급망대응 관점은 ETS적격성·RE품질에 각 0.30을 줘 — 글로벌 압박을 받는 기업이 "비용보다 인정·품질"을 중시함을 반영. 이 가중치가 역전의 방아쇠다. (AHP 방법은 표준, 수치는 잠정 — 전문가 설문으로 교체 예정.)</p>
+  </section>
+
+  <section>
+    <div class="num">입력 ⓓ</div>
+    <h2>종합점수는 이렇게 계산된다 (예: 철강·공급망대응·직접PPA)</h2>
+    <p>종합점수 = Σ(가중치 × 기준점수). 직접 PPA 한 칸이 어떻게 0.79가 되는지:</p>
+    <table>
+      <thead><tr><th>기준</th><th>가중치</th><th>×</th><th>직접PPA 점수</th><th>=</th><th>기여</th></tr></thead>
+      <tbody>
+        <tr><td>비용</td><td>0.20</td><td>×</td><td>0.22 (단가 높아 낮음)</td><td>=</td><td>0.043</td></tr>
+        <tr><td>가격안정성</td><td>0.15</td><td>×</td><td>0.90</td><td>=</td><td>0.135</td></tr>
+        <tr><td>계약유연성</td><td>0.05</td><td>×</td><td>0.20</td><td>=</td><td>0.010</td></tr>
+        <tr><td>ETS적격성</td><td>0.30</td><td>×</td><td>1.00</td><td>=</td><td>0.300</td></tr>
+        <tr><td>RE품질</td><td>0.30</td><td>×</td><td>1.00</td><td>=</td><td>0.300</td></tr>
+        <tr><td colspan="5" style="text-align:right;"><b>종합점수</b></td><td><b>0.788</b></td></tr>
+      </tbody>
+    </table>
+    <p style="font-size:13.5px;color:var(--muted);">직접 PPA는 비용 점수가 낮지만(0.22) 가중치도 작고(0.20), ETS·RE품질에서 만점인데 가중치가 커서(각 0.30) 높은 종합점수가 나온다. 녹색프리미엄은 반대 — 단가는 싸지만(비용점수 1.0) ETS 0·품질 0.2라 공급망대응에서 추락한다. <b>이것이 역전의 산수다.</b></p>
+  </section>
+
+  <section>
     <div class="num">결과 ①</div>
     <h2>단가 기준 순위 매트릭스 (비용엔진)</h2>
     <p>비용엔진만 적용한 순위(총비용 기준). 1=최저비용. 자가발전은 커버리지 비율로 혼합비용 산출.</p>
