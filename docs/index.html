@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>RE100 이행수단 유형별 경제성 연구</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@400;500;600;700&family=IBM+Plex+Sans+KR:wght@300;400;500&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --paper:#FAF7F0; --surface:#FFFFFF; --ink:#23211C; --muted:#6E6A5F;
+    --line:#E5DFD2; --teal:#0F6E56; --teal-d:#04342C; --teal-l:#E1F5EE;
+    --amber:#BA7517;
+    --serif:"Noto Serif KR",serif; --sans:"IBM Plex Sans KR",sans-serif; --mono:"JetBrains Mono",monospace;
+  }
+  *{box-sizing:border-box; margin:0; padding:0;}
+  body{background:var(--paper); color:var(--ink); font-family:var(--sans); font-weight:300; line-height:1.8; min-height:100vh;}
+  .wrap{max-width:840px; margin:0 auto; padding:0 26px;}
+
+  header.mast{padding-top:72px; padding-bottom:30px; border-bottom:2px solid var(--ink);}
+  .kicker{font-size:12px; letter-spacing:.28em; text-transform:uppercase; color:var(--teal); font-weight:500; margin-bottom:16px;}
+  h1{font-family:var(--serif); font-weight:700; font-size:34px; line-height:1.32; margin-bottom:14px; letter-spacing:-.01em;}
+  .lead{font-family:var(--serif); font-size:17px; color:var(--muted); font-weight:400; max-width:62ch;}
+
+  .finding{background:var(--teal-d); color:#EAF6F1; border-radius:14px; padding:26px 30px; margin:34px 0;}
+  .finding .fl{font-size:11px; letter-spacing:.22em; text-transform:uppercase; color:#7FCBB4; margin-bottom:10px; font-weight:500;}
+  .finding p{font-family:var(--serif); font-size:18px; line-height:1.6;}
+
+  .docs{display:grid; grid-template-columns:1fr 1fr; gap:20px; margin:36px 0 20px;}
+  @media (max-width:680px){ .docs{grid-template-columns:1fr;} h1{font-size:27px;} }
+  .card{display:block; text-decoration:none; color:inherit; background:var(--surface); border:1px solid var(--line); border-radius:14px; padding:26px 26px 24px; transition:transform .18s ease, box-shadow .18s ease, border-color .18s ease;}
+  .card:hover{transform:translateY(-3px); box-shadow:0 12px 28px rgba(35,33,28,.10); border-color:var(--teal);}
+  .card .tag{display:inline-block; font-size:11px; letter-spacing:.12em; text-transform:uppercase; color:var(--teal); font-weight:500; margin-bottom:12px;}
+  .card h2{font-family:var(--serif); font-weight:600; font-size:21px; margin-bottom:8px;}
+  .card p{font-size:14px; color:var(--muted); line-height:1.65;}
+  .card .arrow{margin-top:16px; font-family:var(--mono); font-size:13px; color:var(--teal); font-weight:500;}
+
+  .meta{margin:30px 0 10px; padding:20px 24px; background:var(--surface); border:1px solid var(--line); border-radius:12px; font-size:14px;}
+  .meta h3{font-family:var(--serif); font-size:15px; margin-bottom:10px;}
+  .meta ul{list-style:none;}
+  .meta li{padding:3px 0 3px 18px; position:relative; color:var(--muted);}
+  .meta li::before{content:"—"; position:absolute; left:0; color:var(--teal);}
+  .meta a{color:var(--teal); text-decoration:none;}
+  .meta a:hover{text-decoration:underline;}
+
+  footer{margin:40px 0 70px; padding-top:22px; border-top:1px solid var(--line); font-size:12.5px; color:var(--muted); font-style:italic;}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header class="mast">
+    <div class="kicker">RE100 Procurement Economics</div>
+    <h1>기업 유형별 RE100 이행수단<br>경제성과 순위 역전 연구</h1>
+    <p class="lead">녹색프리미엄·REC·제3자PPA·직접PPA·자가발전을 같은 잣대로 환산하고, 단가 순위가 위험·적격성을 반영하면 어떻게 뒤바뀌는지(역전)를 7개 기업 유형에 걸쳐 규명한다.</p>
+  </header>
+
+  <div class="finding">
+    <div class="fl">Headline Finding</div>
+    <p>가장 싼 수단이 최선은 아니다. 단가로는 하위권인 직접 PPA가, ETS 편입 기업이 글로벌 공급망 압박을 받을 때 최상위로 역전된다 — 그리고 이 역전은 입력을 흔들어도 무너지지 않는다.</p>
+  </div>
+
+  <div class="docs">
+    <a class="card" href="results.html">
+      <span class="tag">Document 01</span>
+      <h2>진행상황 · 결과판</h2>
+      <p>연구 배경과 실증적 동기(사용–선호 괴리), 중간 입력값(단가·점수·가중치·계산 예시), 결과 매트릭스와 역전·강건성까지 한눈에 보는 종합 결과판.</p>
+      <div class="arrow">결과판 열기 →</div>
+    </a>
+    <a class="card" href="methodology.html">
+      <span class="tag">Document 02</span>
+      <h2>Phase별 원리와 결정</h2>
+      <p>비용엔진 → 유형화 → 위험·적격성 보정 → 강건성 검증의 계산 흐름을 수식·변수와 함께 따라가며, 각 길목의 의사결정과 그 근거 강도를 짚는다.</p>
+      <div class="arrow">방법론 열기 →</div>
+    </a>
+  </div>
+
+  <div class="meta">
+    <h3>연구 구성</h3>
+    <ul>
+      <li>분석 단위: 기업 유형(아키타입) 7종 — 반도체·철강·석유화학·자동차 대기업, 데이터센터, 중소제조, 영세서비스</li>
+      <li>평가 기준 5개: 비용 · 가격안정성 · 계약유연성 · ETS적격성 · RE품질</li>
+      <li>가중치: Saaty 정수 쌍대비교 기반 AHP 도출(일관성비율 CR&lt;0.1 검증)</li>
+      <li>강건성: 몬테카를로(5000회)·토네이도·임계점 분석</li>
+      <li>코드·데이터: <a href="https://github.com/jwn6174-crypto/re100-procurement-economics">GitHub 저장소</a></li>
+    </ul>
+  </div>
+
+  <footer>
+    본 페이지는 연구 진행 상황을 공유하기 위한 것이며, 수치·가정의 상당수는 보강 예정인 잠정값을 포함한다. 각 문서의 근거 강도 표기(①실데이터·법령 ~ ⑤임의)를 참고할 것.
+  </footer>
+
+</div>
+</body>
+</html>
