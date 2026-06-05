@@ -228,35 +228,35 @@
 
   <section>
     <div class="num">입력 ⓒ</div>
-    <h2>시나리오별 AHP 가중치 (3관점 × 5기준)</h2>
-    <p>"누구의 관점으로 평가하느냐"에 따라 기준별 중요도가 달라진다. 합은 각 1.0.</p>
+    <h2>시나리오별 가중치 — AHP 쌍대비교에서 도출</h2>
+    <p>각 관점을 Saaty 1~9 정수 척도의 쌍대비교 행렬로 구성하고, 기하평균법으로 가중치를 도출했다. 일관성비율 CR이 모두 0.1 미만이라 논리적으로 일관된 판단이다.</p>
     <table>
-      <thead><tr><th>시나리오</th><th>비용</th><th>가격안정성</th><th>계약유연성</th><th>ETS적격성</th><th>RE품질</th></tr></thead>
+      <thead><tr><th>시나리오</th><th>비용</th><th>가격안정성</th><th>계약유연성</th><th>ETS적격성</th><th>RE품질</th><th>CR</th></tr></thead>
       <tbody>
-        <tr><td>비용중시</td><td><b>0.50</b></td><td>0.15</td><td>0.10</td><td>0.15</td><td>0.10</td></tr>
-        <tr><td>안정성중시</td><td>0.20</td><td><b>0.35</b></td><td>0.20</td><td>0.15</td><td>0.10</td></tr>
-        <tr><td>공급망대응</td><td>0.20</td><td>0.15</td><td>0.05</td><td><b>0.30</b></td><td><b>0.30</b></td></tr>
+        <tr><td>비용중시</td><td><b>0.570</b></td><td>0.155</td><td>0.060</td><td>0.155</td><td>0.060</td><td>0.021</td></tr>
+        <tr><td>안정성중시</td><td>0.203</td><td><b>0.434</b></td><td>0.203</td><td>0.084</td><td>0.076</td><td>0.031</td></tr>
+        <tr><td>공급망대응</td><td>0.132</td><td>0.119</td><td>0.036</td><td><b>0.357</b></td><td><b>0.357</b></td><td>0.007</td></tr>
       </tbody>
     </table>
-    <p style="font-size:13.5px;color:var(--muted);">공급망대응 관점은 ETS적격성·RE품질에 각 0.30을 줘 — 글로벌 압박을 받는 기업이 "비용보다 인정·품질"을 중시함을 반영. 이 가중치가 역전의 방아쇠다. (AHP 방법은 표준, 수치는 잠정 — 전문가 설문으로 교체 예정.)</p>
+    <p style="font-size:13.5px;color:var(--muted);">예컨대 공급망대응 행렬에서는 "ETS·품질이 계약유연성보다 극도로(9), 비용·안정성보다 약간(3) 중요"로 비교했고, 그 결과 ETS·품질 가중치가 각 0.357로 도출됐다. 이 가중치가 역전의 방아쇠다. 쌍대비교 판단은 연구자 본인이 각 관점 의도에 맞춰 구성했으며, 전문가 설문 기반 행렬은 후속 과제다.</p>
   </section>
 
   <section>
     <div class="num">입력 ⓓ</div>
     <h2>종합점수는 이렇게 계산된다 (예: 철강·공급망대응·직접PPA)</h2>
-    <p>종합점수 = Σ(가중치 × 기준점수). 직접 PPA 한 칸이 어떻게 0.79가 되는지:</p>
+    <p>종합점수 = Σ(가중치 × 기준점수). 직접 PPA 한 칸이 어떻게 0.86이 되는지:</p>
     <table>
       <thead><tr><th>기준</th><th>가중치</th><th>×</th><th>직접PPA 점수</th><th>=</th><th>기여</th></tr></thead>
       <tbody>
-        <tr><td>비용</td><td>0.20</td><td>×</td><td>0.22 (단가 높아 낮음)</td><td>=</td><td>0.043</td></tr>
-        <tr><td>가격안정성</td><td>0.15</td><td>×</td><td>0.90</td><td>=</td><td>0.135</td></tr>
-        <tr><td>계약유연성</td><td>0.05</td><td>×</td><td>0.20</td><td>=</td><td>0.010</td></tr>
-        <tr><td>ETS적격성</td><td>0.30</td><td>×</td><td>1.00</td><td>=</td><td>0.300</td></tr>
-        <tr><td>RE품질</td><td>0.30</td><td>×</td><td>1.00</td><td>=</td><td>0.300</td></tr>
-        <tr><td colspan="5" style="text-align:right;"><b>종합점수</b></td><td><b>0.788</b></td></tr>
+        <tr><td>비용</td><td>0.132</td><td>×</td><td>0.215 (단가 높아 낮음)</td><td>=</td><td>0.028</td></tr>
+        <tr><td>가격안정성</td><td>0.119</td><td>×</td><td>0.90</td><td>=</td><td>0.107</td></tr>
+        <tr><td>계약유연성</td><td>0.036</td><td>×</td><td>0.20</td><td>=</td><td>0.007</td></tr>
+        <tr><td>ETS적격성</td><td>0.357</td><td>×</td><td>1.00</td><td>=</td><td>0.357</td></tr>
+        <tr><td>RE품질</td><td>0.357</td><td>×</td><td>1.00</td><td>=</td><td>0.357</td></tr>
+        <tr><td colspan="5" style="text-align:right;"><b>종합점수</b></td><td><b>0.856</b></td></tr>
       </tbody>
     </table>
-    <p style="font-size:13.5px;color:var(--muted);">직접 PPA는 비용 점수가 낮지만(0.22) 가중치도 작고(0.20), ETS·RE품질에서 만점인데 가중치가 커서(각 0.30) 높은 종합점수가 나온다. 녹색프리미엄은 반대 — 단가는 싸지만(비용점수 1.0) ETS 0·품질 0.2라 공급망대응에서 추락한다. <b>이것이 역전의 산수다.</b></p>
+    <p style="font-size:13.5px;color:var(--muted);">직접 PPA는 비용 점수가 낮지만(0.215) 가중치도 작고(0.132), ETS·RE품질에서 만점인데 가중치가 커서(각 0.357) 높은 종합점수가 나온다. 녹색프리미엄은 반대 — 단가는 싸지만(비용점수 1.0) ETS 0·품질 0.2라 공급망대응에서 추락(0.263). <b>이것이 역전의 산수다.</b></p>
   </section>
 
   <section>
@@ -322,11 +322,11 @@
     <div class="num">결과 ③</div>
     <h2>강건성 — 역전은 단단하다</h2>
     <div class="cards">
-      <div class="mcard"><div class="v">~98%</div><div class="k">ETS 기업 4종 직접 PPA<br>1~2위 유지 확률 (MC 5000회)</div></div>
+      <div class="mcard"><div class="v">~95%</div><div class="k">ETS 기업 4종 직접 PPA<br>1~2위 유지 확률 (MC 5000회)</div></div>
       <div class="mcard"><div class="v">0건</div><div class="k">단일 입력으로<br>역전이 깨진 경우 (토네이도)</div></div>
       <div class="mcard"><div class="v">77%</div><div class="k">비용중시로 이만큼 이동해야<br>직접 PPA가 3위로 하락 (임계점)</div></div>
     </div>
-    <p>몬테카를로 5000회에서 반도체·철강·석유화학·자동차 4개 ETS 기업 모두 직접 PPA의 1~2위 유지 확률이 약 97~98%로 고르게 나타났다. 토네이도에서 단일 입력(REC·SMP·가중치·망요금)을 극단까지 밀어도 순위는 안 깨졌다. 임계점 분석: 관점을 공급망대응에서 비용중시 쪽으로 <strong>77%까지 이동</strong>해야 비로소 직접 PPA가 3위로 하락한다 — 어지간한 관점 변화에는 버틴다는 뜻. (자가발전은 커버리지 구조 반영 후 전 유형에서 종합 1위.)</p>
+    <p>몬테카를로 5000회에서 반도체·철강·석유화학·자동차 4개 ETS 기업 모두 직접 PPA의 1~2위 유지 확률이 약 95%로 고르게 나타났다. 토네이도에서 단일 입력(REC·SMP·가중치·망요금)을 극단까지 밀어도 순위는 안 깨졌다. 임계점 분석: 관점을 공급망대응에서 비용중시 쪽으로 <strong>77%까지 이동</strong>해야 비로소 직접 PPA가 3위로 하락한다 — 어지간한 관점 변화에는 버틴다는 뜻. (자가발전은 커버리지 구조 반영 후 전 유형에서 종합 1위.) ※ 가중치를 Saaty 정수 쌍대비교 기반 AHP로 재도출(CR&lt;0.1)한 뒤에도 역전과 강건성이 유지됨을 확인.</p>
   </section>
 
   <section>
