@@ -20,6 +20,20 @@ v4 변경점: '부지 보유(has_land, 불리언)' 축을 폐지하고,
 """
 from dataclasses import dataclass
 from typing import Optional
+import unicodedata
+
+
+# ── 표 정렬 헬퍼: 한글(전각)을 폭 2로 계산해 칸을 맞춘다 ──────────────
+def _w(s: str) -> int:
+    """문자열의 표시 폭(전각=2, 반각=1)."""
+    return sum(2 if unicodedata.east_asian_width(c) in ("W", "F") else 1 for c in str(s))
+
+
+def pad(s: str, width: int, align: str = "left") -> str:
+    """표시 폭 기준으로 좌/우 정렬해 공백을 채운다."""
+    s = str(s)
+    fill = max(0, width - _w(s))
+    return (s + " " * fill) if align == "left" else (" " * fill + s)
 
 
 @dataclass

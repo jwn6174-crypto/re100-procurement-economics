@@ -15,7 +15,7 @@
      ahp_weights()로 AHP 가중치 산출 가능(일관성비율 CR 포함).
 """
 from math import prod
-from cost_engine import MarketData, PVParams, cost_engine, rank_costs
+from cost_engine import MarketData, PVParams, cost_engine, rank_costs, pad, _w
 from archetypes import ARCHETYPES, INSTRUMENTS
 
 CRITERIA = ["비용", "가격안정성", "계약유연성", "ETS적격성", "RE품질"]
@@ -27,13 +27,6 @@ INSTRUMENT_SCORES = {
     "제3자 PPA":    {"가격안정성": 0.8, "계약유연성": 0.3, "ETS적격성": 1.0, "RE품질": 0.9},
     "직접 PPA":     {"가격안정성": 0.9, "계약유연성": 0.2, "ETS적격성": 1.0, "RE품질": 1.0},
     "자가발전":     {"가격안정성": 1.0, "계약유연성": 0.2, "ETS적격성": 1.0, "RE품질": 1.0},
-}
-
-# 시나리오별 가중치 (합=1). [TODO] 전문가 AHP로 교체.
-SCENARIOS = {
-    "비용중시":   {"비용": 0.50, "가격안정성": 0.15, "계약유연성": 0.10, "ETS적격성": 0.15, "RE품질": 0.10},
-    "안정성중시": {"비용": 0.20, "가격안정성": 0.35, "계약유연성": 0.20, "ETS적격성": 0.15, "RE품질": 0.10},
-    "공급망대응": {"비용": 0.20, "가격안정성": 0.15, "계약유연성": 0.05, "ETS적격성": 0.30, "RE품질": 0.30},
 }
 
 RI = {1: 0, 2: 0, 3: 0.58, 4: 0.90, 5: 1.12, 6: 1.24, 7: 1.32}
@@ -50,6 +43,54 @@ def ahp_weights(pairwise):
     ci = (lam - n) / (n - 1) if n > 1 else 0
     cr = ci / RI[n] if RI.get(n) else 0
     return w, cr
+
+
+# 시나리오별 쌍대비교 행렬 (Saaty 1~9 정수 척도, 행이 열보다 몇 배 중요한가)
+# CRITERIA 순서: 비용 / 가격안정성 / 계약유연성 / ETS적격성 / RE품질
+# 가중치는 이 행렬에서 AHP(ahp_weights)로 도출하며 일관성비율 CR<0.1로 검증됨.
+# ※ 쌍대비교 판단은 각 관점의 의도에 맞춰 연구자 본인이 구성. 전문가 설문은 후속 과제.
+PAIRWISE = {
+    "비용중시": [          # 비용이 압도적으로 중요한 관점
+        [1,   5,   7,   5,   7  ],
+        [1/5, 1,   3,   1,   3  ],
+        [1/7, 1/3, 1,   1/3, 1  ],
+        [1/5, 1,   3,   1,   3  ],
+        [1/7, 1/3, 1,   1/3, 1  ],
+    ],
+    "안정성중시": [        # 가격안정성이 최우선인 관점
+        [1,   1/3, 1,   3,   3  ],
+        [3,   1,   3,   3,   5  ],
+        [1,   1/3, 1,   3,   3  ],
+        [1/3, 1/3, 1/3, 1,   1  ],
+        [1/3, 1/5, 1/3, 1,   1  ],
+    ],
+    "공급망대응": [        # ETS적격성·RE품질이 동급 최우선(글로벌 압박)
+        [1,   1,   5,   1/3, 1/3],
+        [1,   1,   3,   1/3, 1/3],
+        [1/5, 1/3, 1,   1/9, 1/9],
+        [3,   3,   9,   1,   1  ],
+        [3,   3,   9,   1,   1  ],
+    ],
+}
+
+
+def _derive_scenarios():
+    """쌍대비교 행렬에서 시나리오별 가중치를 AHP로 도출."""
+    out = {}
+    for sc, M in PAIRWISE.items():
+        w, _cr = ahp_weights(M)
+        out[sc] = {c: w[i] for i, c in enumerate(CRITERIA)}
+    return out
+
+
+# 시나리오별 가중치 (PAIRWISE에서 AHP로 도출, 합=1)
+SCENARIOS = _derive_scenarios()
+
+
+def scenario_cr(scenario):
+    """해당 시나리오 쌍대비교 행렬의 일관성비율 CR."""
+    _w, cr = ahp_weights(PAIRWISE[scenario])
+    return cr
 
 
 def cost_scores(costs):
@@ -105,14 +146,15 @@ def composite_rank(scores):
 
 def scenario_matrix(scenario, m, pv):
     print(f"\n[종합순위 — {scenario}]  (1=최우수, x=불가)")
-    header = "유형".ljust(22) + "".join(s[:6].rjust(11) for s in INSTRUMENTS)
+    NAME_W, COL_W = 24, 11
+    header = pad("유형", NAME_W) + "".join(pad(s[:6], COL_W, "right") for s in INSTRUMENTS)
     print(header)
-    print("-" * len(header))
+    print("-" * _w(header))
     for f in ARCHETYPES:
         cr_ = composite_rank(composite_scores(m, pv, f, scenario))
-        row = f.name.ljust(20)
+        row = pad(f.name, NAME_W)
         for s in INSTRUMENTS:
-            row += (str(cr_[s]) if s in cr_ else "x").rjust(11)
+            row += pad(str(cr_[s]) if s in cr_ else "x", COL_W, "right")
         print(row)
 
 
@@ -141,20 +183,15 @@ if __name__ == "__main__":
     print("=" * 66)
 
     # AHP 함수 데모: 예시 쌍대비교 행렬의 가중치·CR
-    demo = [
-        [1, 3, 4, 3, 4],
-        [1/3, 1, 2, 1, 2],
-        [1/4, 1/2, 1, 1/2, 1],
-        [1/3, 1, 2, 1, 2],
-        [1/4, 1/2, 1, 1/2, 1],
-    ]
-    w, cr = ahp_weights(demo)
-    print(" [AHP 데모] 예시 쌍대비교 → 가중치:",
-          ", ".join(f"{c} {wi:.2f}" for c, wi in zip(CRITERIA, w)))
-    print(f"            일관성비율 CR = {cr:.3f}  ({'합격' if cr < 0.1 else '불합격'}, 기준 0.1)")
+    print(" [AHP 가중치 — 시나리오별 쌍대비교에서 도출]")
+    for sc in PAIRWISE:
+        w, cr = ahp_weights(PAIRWISE[sc])
+        print(f"  [{sc}] CR={cr:.4f} ({'합격' if cr < 0.1 else '불합격'}, 기준 0.1)")
+        print("     " + ", ".join(f"{c} {wi:.3f}" for c, wi in zip(CRITERIA, w)))
 
     for sc in SCENARIOS:
         scenario_matrix(sc, m, pv)
 
     flip_report("공급망대응", m, pv)
-    print("\n※ 가중치는 잠정값. 전문가 AHP 쌍대비교로 교체 예정.")
+    print("\n※ 가중치는 Saaty 정수 쌍대비교에서 AHP로 도출(CR<0.1 검증).")
+    print("  쌍대비교 판단은 연구자 본인 구성 — 전문가 설문은 후속 과제.")

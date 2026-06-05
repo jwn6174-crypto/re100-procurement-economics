@@ -20,7 +20,7 @@
   - 서비스 중소 직접 PPA 'ppa_available=False'는 법적 금지가 아니라 현실적 접근성 가정.
       유형 정의 = 임차 점포 기반 영세 서비스·소매(부지 0).
 """
-from cost_engine import MarketData, PVParams, FirmProfile, cost_engine, rank_costs, pv_lcoe
+from cost_engine import MarketData, PVParams, FirmProfile, cost_engine, rank_costs, pv_lcoe, pad, _w
 
 # 안 A + 중소 제조 = 7개 유형 (업종+규모). 부지면적은 대표기업 공개값(추정 표시).
 ARCHETYPES = [
@@ -45,31 +45,33 @@ INSTRUMENTS = ["녹색프리미엄", "REC 구매", "제3자 PPA", "직접 PPA", 
 
 def ranking_matrix(archetypes, m, pv, mode="total"):
     print(f"\n[순위 매트릭스 — {mode} 기준]  (1=최저비용, x=불가)")
-    header = "유형".ljust(22) + "".join(s[:6].rjust(11) for s in INSTRUMENTS)
+    NAME_W, COL_W = 24, 11
+    header = pad("유형", NAME_W) + "".join(pad(s[:6], COL_W, "right") for s in INSTRUMENTS)
     print(header)
-    print("-" * len(header))
+    print("-" * _w(header))
     for f in archetypes:
         costs = cost_engine(m, pv, f, mode=mode)
         ranks = rank_costs(costs)
-        row = f.name.ljust(20)
+        row = pad(f.name, NAME_W)
         for s in INSTRUMENTS:
             cell = "x" if costs[s] is None else str(ranks[s])
-            row += cell.rjust(11)
+            row += pad(cell, COL_W, "right")
         print(row)
 
 
 def attribute_table(archetypes, pv):
     print("\n[아키타입 속성]")
-    print("유형".ljust(22) + "소비(GWh)".rjust(11) + "ETS".rjust(7)
-          + "자가커버".rjust(10) + "직접PPA".rjust(9) + "PPA위치".rjust(9))
+    NAME_W = 24
+    print(pad("유형", NAME_W) + pad("소비(GWh)", 11, "right") + pad("ETS", 8, "right")
+          + pad("자가커버", 11, "right") + pad("직접PPA", 10, "right") + pad("PPA위치", 10, "right"))
     for f in archetypes:
         cov = f.self_gen_coverage(pv)
-        print(f.name.ljust(20)
-              + f"{f.annual_consumption_gwh:>11.0f}"
-              + ("대상" if f.ets_covered else "비대상").rjust(6)
-              + f"{cov*100:>9.1f}%"
-              + ("가능" if f.direct_ppa_available else "불가").rjust(8)
-              + f"{f.ppa_position:>9.2f}")
+        print(pad(f.name, NAME_W)
+              + pad(f"{f.annual_consumption_gwh:.0f}", 11, "right")
+              + pad("대상" if f.ets_covered else "비대상", 8, "right")
+              + pad(f"{cov*100:.1f}%", 11, "right")
+              + pad("가능" if f.direct_ppa_available else "불가", 10, "right")
+              + pad(f"{f.ppa_position:.2f}", 10, "right"))
 
 
 if __name__ == "__main__":
